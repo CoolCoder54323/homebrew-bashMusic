@@ -6,13 +6,18 @@ for dep in sox ffmpeg; do
 	check=$(whereis -q $dep)
 	if [ -z "$check" ]; then
 		echo "'$dep' is not installed. Please install and run script again!"
-		exit 1
+		read -n 3 install
+		if [ "yes" = $install ];then 
+			sudo apt-get -y install $dep
+		else
+			exit 1
+		fi
+
 	fi
 done
 
 
 getArg() {
-
 	echo "$RESPONSE" | sed -n "s/.*\"$1\":\([\"]*[^\",]*[\"]*\).*/\1/p" | xargs echo
 }
 

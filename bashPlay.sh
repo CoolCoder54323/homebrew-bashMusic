@@ -103,9 +103,8 @@ if [ ! $# -eq 1 ]; then
 fi
 
 formatedQuery=$(echo "$1" | tr -s '[:space:]' '+' | sed 's/+$//')
-echo $formatedQuery
 fullSearch="https://itunes.apple.com/search?term=$formatedQuery&media=music&limit=1"
-RESPONSE=$(curl -A 'Mozilla/5.0' "$fullSearch")
+RESPONSE=$(curl -sA 'Mozilla/5.0' "$fullSearch")
 
 echo "Curled: '$fullSearch'"
 name=$(getArg trackName)
@@ -118,12 +117,20 @@ prev=$(getArg previewUrl)
 
 curl -so /tmp/preview.m4a $prev
 durr=$(ffmpeg -i /tmp/preview.m4a -f sox -y /tmp/out.sox 2>&1 | sed -nE "s/.*Duration: [0-9]{2}:[0-9]{2}:([0-9]{2})\.[0-9]{2}.*/\1/p")
-play -q /tmp/out.sox &
+play -q /tmp/out.sox >/dev/null 2>&1 &
 
-whiteList=(3 4 13 14)
+cleanup(){
+	echo
+	echo Thanks for listening
+	rm /tmp/out.sox /tmp/preview.m4a
+	exit 0
+}
+
+trap cleanup SIGINT
+whiteList=(3 4 13 14 17)
+content=( "$name" "$artist" "[]" "0/30 sec" "ctrl-c to exit")
 
 printf -- '-%c\b' {0..99} && printf -- '-\n'
-content=( "$name" "$artist" "[]" "0/30 sec")
 for(( i=0; i<$((durr+1));i++)){
 	content[3]="$i/$durr sec"
 	content[2]="$(printLoadBar $i $durr)"
@@ -131,9 +138,8 @@ for(( i=0; i<$((durr+1));i++)){
 	sleep 1
 	removeBox
 }
-
 printBox ${whiteList[@]}
+cleanup
 
-rm /tmp/out.sox /tmp/preview.m4a
 
 

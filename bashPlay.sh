@@ -88,9 +88,9 @@ printLoadBar() {
 		if [ $tick -lt $curr ]; then
 			echo -n "-"
 		elif [ $tick -eq $curr ]; then
-			echo -n "\\"
+			echo -n "/"
 		else
-			echo -n " "
+			echo -n "_"
 		fi
 	
 	}
@@ -99,7 +99,7 @@ printLoadBar() {
 
 if [ ! $# -eq 1 ]; then 
 	echo only takes one arg not $#
-	exit 1:w
+	exit 1
 fi
 
 formatedQuery=$(echo "$1" | tr -s '[:space:]' '+' | sed 's/+$//')

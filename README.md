@@ -6,7 +6,7 @@
 
 For **Mac**:
 
-To install **BashPlay** with Homebrew, follow these steps:
+Make sure [Homebrew](https://brew.sh/) is installed, then follow these steps:
 
 1. Tap the repository:
    ```bash

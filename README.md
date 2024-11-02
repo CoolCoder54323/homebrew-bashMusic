@@ -16,6 +16,7 @@ To install **BashPlay** with Homebrew, follow these steps:
 2. Install `bashplay`:
    ```bash
    brew install bashplay
+   bashplay <query>
    ```
 For **Linux or wsl**:
 
@@ -27,7 +28,7 @@ For **Linux or wsl**:
 2. Run directly `bashplay`:
    ```bash
    cd homebrew-bashMusic
-   bash bashPlay.sh
+   bash bashPlay.sh <query>
    ```
 
 Once installed, you can use the `bashplay` command directly from your terminal.

@@ -128,7 +128,7 @@ cleanup(){
 
 trap cleanup SIGINT
 whiteList=(3 4 13 14 17)
-content=( "$name" "$artist" "[]" "0/30 sec" "ctrl-c to exit")
+content=( "$name" "$artist" "[]" "0/30 sec" "ctrl-c to exit early")
 
 printf -- '-%c\b' {0..99} && printf -- '-\n'
 for(( i=0; i<$((durr+1));i++)){

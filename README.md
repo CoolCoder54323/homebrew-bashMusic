@@ -40,17 +40,7 @@ Once installed, you can use the `bashplay` command directly from your terminal.
 ```bash
 bashplay "<song or artist name>"
 ```
-
-### Example
-
-```bash
-bashplay "Imagine Dragons"
-```
-
-This command will play a short preview of a song by Imagine Dragons.
-
 ### Note
-- Ensure you have an active internet connection to fetch and play the song previews.
 - The tool currently supports only one argument (song or artist) at a time.
 
 ## License
@@ -58,5 +48,3 @@ This command will play a short preview of a song by Imagine Dragons.
 This project is licensed under the MIT License.
 
 ---
-
-Feel free to adjust any details, especially around functionality, to better match what `bashplay` does specifically!

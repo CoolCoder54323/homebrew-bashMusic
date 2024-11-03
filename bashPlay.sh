@@ -27,7 +27,13 @@ for dep in sox ffmpeg; do
 done
 
 getArg() {
-	echo "$RESPONSE" | sed -n "s/.*\"$1\":\([\"]*[^\",]*[\"]*\).*/\1/p" | xargs echo
+	string=$(echo "$RESPONSE" | sed -n "s/.*\"$1\":[\"]*\([^\",]*\)[\"].*/\1/p")
+
+	if [ -z "$string" ]; then
+		string=$(echo "$RESPONSE" | sed -n "s/.*\"$1\":\([0-9][0-9]*\).*/\1/p")
+	fi
+	
+	echo "$string"
 }
 
 printBox() {
@@ -106,16 +112,29 @@ formatedQuery=$(echo "$1" | tr -s '[:space:]' '+' | sed 's/+$//')
 fullSearch="https://itunes.apple.com/search?term=$formatedQuery&media=music&limit=1"
 RESPONSE=$(curl -sA 'Mozilla/5.0' "$fullSearch")
 
+if [ -z "$RESPONSE" ]; then
+	echo "Connection failed"
+	exit 1
+fi
+
+responses=$(getArg resultCount)
+
+if [ "$responses" -eq 0 ]; then
+	echo "Sorry no results for that search"
+	exit 0
+fi
+
 echo "Curled: '$fullSearch'"
+
 name=$(getArg trackName)
 artist=$(getArg artistName)
-echo
-title="You should listen to: "$name"  by  $artist! Heres a preview :)"
-echo $title
-echo
-prev=$(getArg previewUrl)
+prevLink=$(getArg previewUrl)
+title="You should listen to: $name by  $artist! Heres a preview :)"
 
-curl -so /tmp/preview.m4a $prev
+printf "\n$title\n\n"
+
+curl -so /tmp/preview.m4a "$prevLink"
+
 durr=$(ffmpeg -i /tmp/preview.m4a -f sox -y /tmp/out.sox 2>&1 | sed -nE "s/.*Duration: [0-9]{2}:[0-9]{2}:([0-9]{2})\.[0-9]{2}.*/\1/p")
 play -q /tmp/out.sox >/dev/null 2>&1 &
 
